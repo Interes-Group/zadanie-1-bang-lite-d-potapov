@@ -5,17 +5,17 @@ import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 
 import java.util.ArrayList;
 
-public class Game {
+public class BangGame {
     private ArrayList<Player> players;
-    private final Deck deck;
-    public Game() {
+    private Deck deck;
+    public BangGame() {
         System.out.println(" ----- Welcome to Bang! -----");
-        deck = new Deck();
-        initPlayerList();
+        initPlayersList();
+        deck = new Deck(players);
         start();
     }
 
-    private void initPlayerList(){
+    private void initPlayersList(){
         int playersCount = 0;
         while (playersCount < 2 || playersCount > 4) {
             playersCount = ZKlavesnice.readInt("Input number of players (2 - 4): ");
@@ -24,7 +24,7 @@ public class Game {
             }
         }
 
-        this.players = new ArrayList<>();
+        players = new ArrayList<>();
         for (int i = 1; i <= playersCount; i++) {
             Player player = new Player(i, deck);
             players.add(player);
@@ -36,7 +36,7 @@ public class Game {
         Player activePlayer = players.get(0);
 
         while (getAlivePlayerCount() > 1){
-            printPlayersStats(activePlayer);
+            printPlayersStats();
 
             activePlayer.makeMove();
             activePlayer = getNextAlivePlayer(activePlayer);
@@ -66,15 +66,13 @@ public class Game {
         }
         return count;
     }
-    private void printPlayersStats(Player activePlayer){
-        System.out.println("Cards in front of each player:");
+    private void printPlayersStats(){
+
+        System.out.println(" ---- Cards in front of each player: ---- ");
 
         for (Player player : players) {
-            if (player == activePlayer) {
-                System.out.print("You (" + player.getLives() + " lives):");
-            } else {
-                System.out.print(player.getId() + " player (" + player.getLives() + " lives):");
-            }
+            System.out.print("Player " + player.getId() + " (" + player.getLives() + " lives):");
+
             if (player.getFrontCards().size() == 0) {
                 System.out.println(" -");
             } else {
