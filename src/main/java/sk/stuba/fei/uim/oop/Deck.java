@@ -12,9 +12,9 @@ import sk.stuba.fei.uim.oop.cards.CatBalou;
 import sk.stuba.fei.uim.oop.cards.Stagecoach;
 import sk.stuba.fei.uim.oop.cards.Indians;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
+
 public class Deck {
     final private static int BARREL_COUNT = 2;
     final private static int DYNAMITE_COUNT = 1;
@@ -28,51 +28,35 @@ public class Deck {
 
     private ArrayList<Card> cardsInDeck;
     private ArrayList<Card> cardsInDiscardPile;
-    private ArrayList<Player> players;
 
-    public Deck(ArrayList<Player> players){
+    public Deck(){
         cardsInDeck = new ArrayList<>();
         cardsInDiscardPile = new ArrayList<>();
-        this.players = players;
         fillDeckByDefault();
     }
 
     private void fillDeckByDefault(){
         for (int i = 0; i < BARREL_COUNT; i++)
-            cardsInDeck.add(new Barrel(players));
+            cardsInDeck.add(new Barrel());
         for (int i = 0; i < DYNAMITE_COUNT; i++)
-            cardsInDeck.add(new Dynamite(players));
+            cardsInDeck.add(new Dynamite());
         for (int i = 0; i < PRISON_COUNT; i++)
-            cardsInDeck.add(new Prison(players));
+            cardsInDeck.add(new Prison());
         for (int i = 0; i < BANG_COUNT; i++)
-            cardsInDeck.add(new Bang(players));
+            cardsInDeck.add(new Bang());
         for (int i = 0; i < MISSED_COUNT; i++)
-            cardsInDeck.add(new Missed(players));
+            cardsInDeck.add(new Missed());
         for (int i = 0; i < BEER_COUNT; i++)
-            cardsInDeck.add(new Beer(players));
+            cardsInDeck.add(new Beer());
         for (int i = 0; i < CAT_BALOU_COUNT; i++)
-            cardsInDeck.add(new CatBalou(players));
+            cardsInDeck.add(new CatBalou());
         for (int i = 0; i < STAGECOACH_COUNT; i++)
-            cardsInDeck.add(new Stagecoach(players));
+            cardsInDeck.add(new Stagecoach());
         for (int i = 0; i < INDIANS_COUNT; i++)
-            cardsInDeck.add(new Indians(players));
+            cardsInDeck.add(new Indians());
 
         Collections.shuffle(cardsInDeck);
     }
-    private void shuffleDiscardPileIntoDeck(){
-        cardsInDeck.addAll(cardsInDiscardPile);
-        cardsInDiscardPile.clear();
-        Collections.shuffle(cardsInDeck);
-    }
-
-    public Card drawCard(){
-        Card card = cardsInDeck.remove(cardsInDeck.size() - 1);
-        if (cardsInDeck.size() == 0) {
-            shuffleDiscardPileIntoDeck();
-        }
-        return card;
-    }
-
     public void addToDiscardPile(Card card){
         cardsInDiscardPile.add(card);
     }
@@ -80,5 +64,18 @@ public class Deck {
         cardsInDiscardPile.addAll(handCards);
         cardsInDiscardPile.addAll(frontCards);
     }
-
+    public Card drawCard(){
+        if (cardsInDeck.size() == 0) {
+            if (shuffleDiscardPileIntoDeck() == 0){
+                return null;
+            }
+        }
+        return cardsInDeck.remove(cardsInDeck.size() - 1);
+    }
+    private int shuffleDiscardPileIntoDeck(){
+        cardsInDeck.addAll(cardsInDiscardPile);
+        cardsInDiscardPile.clear();
+        Collections.shuffle(cardsInDeck);
+        return cardsInDeck.size();
+    }
 }

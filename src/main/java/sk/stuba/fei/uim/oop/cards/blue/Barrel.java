@@ -8,22 +8,21 @@ import java.util.Random;
 
 public class Barrel extends BlueCard {
     private static final String CARD_NAME = "Barrel";
-    Random random;
+    private Random random;
 
-    public Barrel(ArrayList<Player> players) {
-        super(CARD_NAME, players);
-        this.players = players;
+    public Barrel() {
+        super(CARD_NAME);
          random = new Random();
     }
 
     @Override
-    public void play(Player player) {
-        super.play(player);
-        lieInFrontOfPlayer(player);
-    }
-
-    @Override
-    public boolean effect(Player player) {
-        return random.nextInt(4) == 0;
+    public boolean effect(Player activePlayer, ArrayList<Player> players) {
+        boolean successSave = (random.nextInt(4) == 0);
+        if (successSave) {
+            System.out.println("The barrel saved player" + activePlayer.getId() + "!");
+            return true;
+        }
+        System.out.println("The barrel did not save player " + activePlayer.getId() + "! :(");
+        return false;
     }
 }

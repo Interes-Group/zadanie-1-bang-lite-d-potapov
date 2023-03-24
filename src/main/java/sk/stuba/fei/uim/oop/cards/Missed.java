@@ -7,17 +7,17 @@ import java.util.ArrayList;
 public class Missed extends Card {
     private static final String CARD_NAME = "Missed";
 
-    public Missed(ArrayList<Player> players) {
-        super(CARD_NAME, players);
+    public Missed() {
+        super(CARD_NAME);
     }
 
     @Override
-    public void play(Player activePlayer) {
-        super.play(activePlayer);
+    public void play(Player activePlayer, ArrayList<Player> players) {
         System.out.println("The " + CARD_NAME + " card cannot be played!");
     }
 
-    public void use(Player player) {
-        System.out.println("Player " + player.getId() + " used " + CARD_NAME + "!");
+    public void effect(Player player) {
+        System.out.println("Player " + player.getId() + " uses " + CARD_NAME + "! And saves his life.");
+        player.discardCard(this);
     }
 }

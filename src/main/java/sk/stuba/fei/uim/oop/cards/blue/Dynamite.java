@@ -7,21 +7,37 @@ import java.util.ArrayList;
 
 public class Dynamite extends BlueCard {
     private static final String CARD_NAME = "Dynamite";
-    Random random;
+    private Random random;
 
 
-    public Dynamite(ArrayList<Player> players) {
-        super(CARD_NAME, players);
-
+    public Dynamite() {
+        super(CARD_NAME);
         random = new Random();
     }
+
     @Override
-    public void play(Player player) {
-        super.play(player);
-        lieInFrontOfPlayer(player);
+    public boolean effect(Player activePlayer, ArrayList<Player> players) {
+        boolean successExplode = (random.nextInt(8) == 0);
+        if (successExplode) {
+            System.out.println("Dynamite blew up player " + activePlayer.getId() + "!");
+            for (int i = 0; i < 3; i++){
+                activePlayer.loseLife();
+            }
+            activePlayer.discardCard(this);
+            return true;
+        }
+
+        Player previousPlayer = getPreviousPlayer(players.indexOf(activePlayer), players);
+        System.out.println("Dynamite did not explode, goes to player " + previousPlayer.getId() + "!");
+        previousPlayer.addCardInFront(this);
+        return false;
     }
-    @Override
-    public boolean effect(Player player) {
-        return random.nextInt(8) == 0;
+
+    private Player getPreviousPlayer(int activePlayerIdx, ArrayList<Player> players){
+        int prevPlayerIdx = activePlayerIdx;
+        do {
+            prevPlayerIdx = (prevPlayerIdx - 1 < 0) ? players.size() - 1 : prevPlayerIdx - 1;
+        } while (!players.get(prevPlayerIdx).isAlive());
+        return players.get(prevPlayerIdx);
     }
 }

@@ -1,66 +1,33 @@
 package sk.stuba.fei.uim.oop.cards;
 import sk.stuba.fei.uim.oop.Player;
 import sk.stuba.fei.uim.oop.cards.blue.BlueCard;
-import sk.stuba.fei.uim.oop.utility.ZKlavesnice;
 
 import java.util.ArrayList;
 
 public class Bang extends Card {
     private static final String CARD_NAME = "Bang";
-    private ArrayList<Player> players;
 
-    public Bang(ArrayList<Player> players){
-        super(CARD_NAME, players);
-        this.players = players;
+    public Bang(){
+        super(CARD_NAME);
     }
 
     @Override
-    public void play(Player activePlayer) {
-        super.play(activePlayer);
+    public void play(Player activePlayer, ArrayList<Player> players) {
+        super.play(activePlayer, players);
 
-        ArrayList<Integer> indexes = new ArrayList<>();
-        System.out.print("Your enemies: ");
-        for (Player player: players){
-            if (player != activePlayer && player.isAlive()) {
-                indexes.add(player.getId());
-                System.out.println("Player " + player.getId() + "; ");
-            }
-        }
-        System.out.println("\n");
+        Player selectedPlayer = selectPlayer(activePlayer, players);
+        BlueCard barrelCard = selectedPlayer.getBarrelInFront();
+        Missed missedCard = selectedPlayer.getMissedCard();
 
-        int index;
-        boolean isIndexValid = false;
-        do {
-            index = ZKlavesnice.readInt("Input the index of the player you want to attack: ");
-            if (indexes.contains(index)) {
-                isIndexValid = true;
+        if (barrelCard == null || !barrelCard.effect(selectedPlayer, players)){
+            if (missedCard == null) {
+                System.out.println("Player " + activePlayer.getId() + " shoots player " + selectedPlayer.getId() + "!");
+                selectedPlayer.loseLife();
             } else {
-                System.out.println("There is no such index");
-            }
-        } while (isIndexValid);
-
-        effect(players.get(index));
-    }
-
-    @Override
-    public boolean effect(Player player) {
-        BlueCard barrelCard = player.getBarrelInFront();
-        Card missedCard = player.getMissedCard();
-
-        if (barrelCard != null){
-            if(barrelCard.effect(player)){
-                return false;
+                missedCard.effect(selectedPlayer);
             }
         }
 
-        if (missedCard != null){
-            missedCard.effect(player);
-            return false;
-        }else {
-            System.out.println("Player " + player + " is shot!");
-            player.loseLife();
-            return true;
-        }
-
+        activePlayer.discardCard(this);
     }
 }
