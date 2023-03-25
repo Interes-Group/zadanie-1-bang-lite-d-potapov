@@ -2,7 +2,7 @@ package sk.stuba.fei.uim.oop.cards;
 
 import sk.stuba.fei.uim.oop.Player;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Indians extends Card {
     private static final String CARD_NAME = "Indians";
@@ -12,19 +12,23 @@ public class Indians extends Card {
     }
 
     @Override
-    public void play(Player activePlayer, ArrayList<Player> players) {
+    public void play(Player activePlayer, List<Player> players) {
         super.play(activePlayer, players);
-        for (Player player: players) {
-            if (player != activePlayer){
-                for (Card card: player.getHandCards()) {
-                    if (card instanceof Bang){
+        for (Player player : players) {
+            if (player != activePlayer && player.isAlive()) {
+                boolean isBangInHandCards = false;
+                for (Card card : player.getHandCards()) {
+                    if (card instanceof Bang) {
+                        isBangInHandCards = true;
                         System.out.println("Player " + player.getId() + " discards the Bang card!");
                         player.discardCard(card);
-                        return;
+                        break;
                     }
                 }
-                System.out.println("Player " + player.getId() + " loses life!");
-                player.loseLife();
+                if (!isBangInHandCards) {
+                    System.out.println("Player " + player.getId() + " loses life!");
+                    player.loseLife();
+                }
             }
         }
         activePlayer.discardCard(this);

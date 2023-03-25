@@ -2,7 +2,7 @@ package sk.stuba.fei.uim.oop.cards;
 
 import sk.stuba.fei.uim.oop.Player;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Missed extends Card {
     private static final String CARD_NAME = "Missed";
@@ -12,7 +12,7 @@ public class Missed extends Card {
     }
 
     @Override
-    public void play(Player activePlayer, ArrayList<Player> players) {
+    public void play(Player activePlayer, List<Player> players) {
         System.out.println("The " + CARD_NAME + " card cannot be played!");
     }
 

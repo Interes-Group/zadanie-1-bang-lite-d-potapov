@@ -1,41 +1,33 @@
 package sk.stuba.fei.uim.oop;
 
-import sk.stuba.fei.uim.oop.cards.Card;
+import sk.stuba.fei.uim.oop.cards.*;
 import sk.stuba.fei.uim.oop.cards.blue.Barrel;
 import sk.stuba.fei.uim.oop.cards.blue.BlueCard;
 import sk.stuba.fei.uim.oop.cards.blue.Dynamite;
 import sk.stuba.fei.uim.oop.cards.blue.Prison;
-import sk.stuba.fei.uim.oop.cards.Bang;
-import sk.stuba.fei.uim.oop.cards.Missed;
-import sk.stuba.fei.uim.oop.cards.Beer;
-import sk.stuba.fei.uim.oop.cards.CatBalou;
-import sk.stuba.fei.uim.oop.cards.Stagecoach;
-import sk.stuba.fei.uim.oop.cards.Indians;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Deck {
-    final private static int BARREL_COUNT = 2;
-    final private static int DYNAMITE_COUNT = 1;
-    final private static int PRISON_COUNT = 3;
-    final private static int BANG_COUNT = 30;
-    final private static int MISSED_COUNT = 15;
-    final private static int BEER_COUNT = 8;
-    final private static int CAT_BALOU_COUNT = 6;
-    final private static int STAGECOACH_COUNT = 4;
-    final private static int INDIANS_COUNT = 2;
+    private final static int BARREL_COUNT = 2;
+    private final static int DYNAMITE_COUNT = 1;
+    private final static int PRISON_COUNT = 3;
+    private final static int BANG_COUNT = 30;
+    private final static int MISSED_COUNT = 15;
+    private final static int BEER_COUNT = 8;
+    private final static int CAT_BALOU_COUNT = 6;
+    private final static int STAGECOACH_COUNT = 4;
+    private final static int INDIANS_COUNT = 2;
 
-    private ArrayList<Card> cardsInDeck;
-    private ArrayList<Card> cardsInDiscardPile;
+    private final List<Card> cardsInDeck;
+    private final List<Card> cardsInDiscardPile;
 
-    public Deck(){
+    public Deck() {
         cardsInDeck = new ArrayList<>();
         cardsInDiscardPile = new ArrayList<>();
-        fillDeckByDefault();
-    }
 
-    private void fillDeckByDefault(){
         for (int i = 0; i < BARREL_COUNT; i++)
             cardsInDeck.add(new Barrel());
         for (int i = 0; i < DYNAMITE_COUNT; i++)
@@ -57,22 +49,28 @@ public class Deck {
 
         Collections.shuffle(cardsInDeck);
     }
-    public void addToDiscardPile(Card card){
+
+    public void addToDiscardPile(Card card) {
         cardsInDiscardPile.add(card);
     }
-    public void addToDiscardPile(ArrayList<Card> handCards, ArrayList<BlueCard> frontCards){
+
+    public void addToDiscardPile(List<Card> handCards, List<BlueCard> frontCards) {
         cardsInDiscardPile.addAll(handCards);
         cardsInDiscardPile.addAll(frontCards);
+        handCards.clear();
+        frontCards.clear();
     }
-    public Card drawCard(){
+
+    public Card drawCard() {
         if (cardsInDeck.size() == 0) {
-            if (shuffleDiscardPileIntoDeck() == 0){
+            if (shuffleDiscardPileIntoDeck() == 0) {
                 return null;
             }
         }
         return cardsInDeck.remove(cardsInDeck.size() - 1);
     }
-    private int shuffleDiscardPileIntoDeck(){
+
+    private int shuffleDiscardPileIntoDeck() {
         cardsInDeck.addAll(cardsInDiscardPile);
         cardsInDiscardPile.clear();
         Collections.shuffle(cardsInDeck);
