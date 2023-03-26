@@ -11,6 +11,7 @@ import java.util.List;
 
 
 public class BangGame {
+    private static final String ANSI_GREEN = "\u001B[32m";
     private static final String ANSI_YELLOW = "\u001B[33m";
     private static final String ANSI_BLUE = "\u001B[34m";
     private static final String ANSI_RESET = "\u001B[0m";
@@ -30,7 +31,7 @@ public class BangGame {
 
         int playersCount = 0;
         while (playersCount < 2 || playersCount > 4) {
-            playersCount = ZKlavesnice.readInt("Input number of players (2 - 4): ");
+            playersCount = ZKlavesnice.readInt("Enter number of players (2 - 4): ");
             if (playersCount < 2 || playersCount > 4) {
                 System.out.println("Incorrect number of players! Try again.");
             }
@@ -42,7 +43,7 @@ public class BangGame {
     }
 
     private void start() {
-        System.out.println("\n --------- Game on! ---------");
+        System.out.println(" --------- Game on! ---------");
         Player activePlayer = players.get(0);
 
         while (getAlivePlayerCount() > 1) {
@@ -55,6 +56,33 @@ public class BangGame {
         }
 
         System.out.println("\n ----- End of game. The winner is player " + activePlayer.getId() + "! ----- ");
+    }
+
+    private int getAlivePlayerCount() {
+        int count = 0;
+        for (Player player : this.players) {
+            if (player.isAlive()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private void printPlayersStats() {
+        System.out.println(ANSI_YELLOW);
+        System.out.println("Cards in front of each player: ");
+        for (Player player : players) {
+            System.out.print(" Player " + player.getId() + " (" + player.getLives() + " lives):");
+            if (player.getFrontCards().isEmpty()) {
+                System.out.println(" -");
+            } else {
+                for (BlueCard card : player.getFrontCards()) {
+                    System.out.print(" " + card.getName() + " ");
+                }
+                System.out.println();
+            }
+        }
+        System.out.print(ANSI_RESET);
     }
 
     private boolean useFrontCardsEffect(Player player) {
@@ -87,58 +115,34 @@ public class BangGame {
 
         playCards(activePlayer);
 
-        System.out.println("Player " + activePlayer.getId() + " discards this extra cards:");
-        activePlayer.discardExtraCards();
-
-        System.out.println("\n ---------------------------");
+        if (getAlivePlayerCount() > 1) {
+            activePlayer.discardExtraCards();
+            System.out.println("\n ---------------------------");
+        }
     }
 
     private void playCards(Player activePlayer) {
-        int cardIndex;
+        int inputedCardIndex;
         do {
-            List<BlueCard> frontCards = activePlayer.getFrontCards();
+            printPlayerCards(activePlayer);
+
             List<Card> handCards = activePlayer.getHandCards();
-
-            System.out.print(ANSI_BLUE);
-            printFrontCards(frontCards);
-            printHandCards(handCards);
-            System.out.print(ANSI_RESET);
-
-            cardIndex = ZKlavesnice.readInt("Input the index of the card you want to play (0 to skip): ");
-            if (cardIndex < 0 || cardIndex > handCards.size()) {
+            inputedCardIndex = ZKlavesnice.readInt("Enter the index of the card you want to play (0 to skip): ");
+            if (inputedCardIndex > 0 && inputedCardIndex <= handCards.size()) {
+                handCards.get(inputedCardIndex - 1).play(activePlayer, players);
+                ZKlavesnice.readString(ANSI_GREEN + "Press Enter to continue..." + ANSI_RESET);
+            } else if (inputedCardIndex != 0) {
                 System.out.println("There is no such index.");
-                continue;
             }
 
-            if (cardIndex != 0) {
-                handCards.get(cardIndex - 1).play(activePlayer, players);
-            }
-
-            System.out.println();
-        } while (cardIndex != 0 && getAlivePlayerCount() > 1);
+        } while (inputedCardIndex != 0 && getAlivePlayerCount() > 1 && !activePlayer.getHandCards().isEmpty());
     }
 
-
-    private Player getNextAlivePlayer(Player activePlayer) {
-        int nextPlayerIndex = players.indexOf(activePlayer);
-        Player nextAlivePlayer;
-        do {
-            nextPlayerIndex++;
-            nextPlayerIndex %= players.size();
-            nextAlivePlayer = players.get(nextPlayerIndex);
-        } while (!nextAlivePlayer.isAlive());
-
-        return nextAlivePlayer;
-    }
-
-    private int getAlivePlayerCount() {
-        int count = 0;
-        for (Player player : this.players) {
-            if (player.isAlive()) {
-                count++;
-            }
-        }
-        return count;
+    private void printPlayerCards(Player player) {
+        System.out.print(ANSI_BLUE);
+        printFrontCards(player.getFrontCards());
+        printHandCards(player.getHandCards());
+        System.out.print(ANSI_RESET);
     }
 
     private void printFrontCards(List<BlueCard> frontCards) {
@@ -165,19 +169,15 @@ public class BangGame {
         }
     }
 
-    private void printPlayersStats() {
-        System.out.println(ANSI_YELLOW + "\nCards in front of each player: ");
-        for (Player player : players) {
-            System.out.print(" Player " + player.getId() + " (" + player.getLives() + " lives):");
-            if (player.getFrontCards().size() == 0) {
-                System.out.println(" -");
-            } else {
-                for (BlueCard card : player.getFrontCards()) {
-                    System.out.print(" " + card.getName() + " ");
-                }
-                System.out.println();
-            }
-        }
-        System.out.print(ANSI_RESET);
+    private Player getNextAlivePlayer(Player activePlayer) {
+        int nextPlayerIndex = players.indexOf(activePlayer);
+        Player nextAlivePlayer;
+        do {
+            nextPlayerIndex++;
+            nextPlayerIndex %= players.size();
+            nextAlivePlayer = players.get(nextPlayerIndex);
+        } while (!nextAlivePlayer.isAlive());
+
+        return nextAlivePlayer;
     }
 }

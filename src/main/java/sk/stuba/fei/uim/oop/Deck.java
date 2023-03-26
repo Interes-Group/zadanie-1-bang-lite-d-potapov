@@ -62,18 +62,16 @@ public class Deck {
     }
 
     public Card drawCard() {
-        if (cardsInDeck.size() == 0) {
-            if (shuffleDiscardPileIntoDeck() == 0) {
-                return null;
-            }
+        if (cardsInDeck.isEmpty() && reshuffleCards()) {
+            return null;
         }
         return cardsInDeck.remove(cardsInDeck.size() - 1);
     }
 
-    private int shuffleDiscardPileIntoDeck() {
+    private boolean reshuffleCards() {
         cardsInDeck.addAll(cardsInDiscardPile);
         cardsInDiscardPile.clear();
         Collections.shuffle(cardsInDeck);
-        return cardsInDeck.size();
+        return cardsInDeck.isEmpty();
     }
 }

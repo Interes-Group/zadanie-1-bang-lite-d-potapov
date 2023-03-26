@@ -1,5 +1,6 @@
 package sk.stuba.fei.uim.oop;
 
+import sk.stuba.fei.uim.oop.cards.Bang;
 import sk.stuba.fei.uim.oop.cards.Card;
 import sk.stuba.fei.uim.oop.cards.Missed;
 import sk.stuba.fei.uim.oop.cards.blue.Barrel;
@@ -69,6 +70,15 @@ public class Player {
         return null;
     }
 
+    public Card getBangInCards() {
+        for (Card card : handCards) {
+            if (card instanceof Bang) {
+                return card;
+            }
+        }
+        return null;
+    }
+
     public boolean isAlive() {
         return lives > 0;
     }
@@ -109,6 +119,7 @@ public class Player {
         deck.addToDiscardPile(card);
         handCards.remove(card);
     }
+
     public void discardCard(BlueCard card) {
         deck.addToDiscardPile(card);
         if (!handCards.remove(card)) {
@@ -130,9 +141,8 @@ public class Player {
 
     public void discardExtraCards() {
         int handCardsCount = handCards.size();
-        if (handCardsCount <= lives) {
-            System.out.print(" no cards");
-        } else {
+        if (handCardsCount > lives) {
+            System.out.println("Player " + id + " discards this extra cards:");
             while (handCardsCount > lives) {
                 int discardCardIndex = random.nextInt(handCardsCount);
                 Card discardCard = handCards.get(discardCardIndex);
@@ -141,7 +151,7 @@ public class Player {
                 deck.addToDiscardPile(discardCard);
                 handCardsCount = handCards.size();
             }
+            System.out.println();
         }
-        System.out.println();
     }
 }

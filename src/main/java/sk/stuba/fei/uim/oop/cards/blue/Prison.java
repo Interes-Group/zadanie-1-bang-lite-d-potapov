@@ -33,8 +33,9 @@ public class Prison extends BlueCard {
         if (successEscape) {
             System.out.println("Player " + player.getId() + " escaped from the prison!");
             return false;
+        } else {
+            System.out.println("Player " + player.getId() + " fails to escape from prison. Player skips a turn!");
+            return true;
         }
-        System.out.println("Player " + player.getId() + " fails to escape from prison. Player skips a turn!");
-        return true;
     }
 }

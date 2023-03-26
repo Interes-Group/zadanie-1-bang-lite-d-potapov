@@ -36,11 +36,11 @@ public class Dynamite extends BlueCard {
         return false;
     }
 
-    private Player getPreviousPlayer(int activePlayerIdx, List<Player> players) {
-        int prevPlayerIdx = activePlayerIdx;
+    private Player getPreviousPlayer(int activePlayerIndex, List<Player> players) {
+        int previousPlayerIndex = activePlayerIndex;
         do {
-            prevPlayerIdx = (prevPlayerIdx - 1 < 0) ? players.size() - 1 : prevPlayerIdx - 1;
-        } while (!players.get(prevPlayerIdx).isAlive());
-        return players.get(prevPlayerIdx);
+            previousPlayerIndex = (previousPlayerIndex - 1 < 0) ? players.size() - 1 : previousPlayerIndex - 1;
+        } while (!players.get(previousPlayerIndex).isAlive());
+        return players.get(previousPlayerIndex);
     }
 }

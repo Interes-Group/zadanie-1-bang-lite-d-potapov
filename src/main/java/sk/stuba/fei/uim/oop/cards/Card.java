@@ -23,8 +23,8 @@ public abstract class Card {
 
     protected Player selectPlayer(Player activePlayer, List<Player> players) {
         List<Integer> indexes = new ArrayList<>();
-        System.out.println("Your enemies: ");
 
+        System.out.println("Your enemies: ");
         for (Player player : players) {
             if (player != activePlayer && player.isAlive()) {
                 indexes.add(player.getId());

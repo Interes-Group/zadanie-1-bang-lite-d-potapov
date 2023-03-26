@@ -8,7 +8,6 @@ import java.util.Random;
 
 public class Barrel extends BlueCard {
     private static final String CARD_NAME = "Barrel";
-
     private final Random random;
 
     public Barrel() {
@@ -22,8 +21,9 @@ public class Barrel extends BlueCard {
         if (successSave) {
             System.out.println("The barrel saved player" + activePlayer.getId() + "!");
             return true;
+        } else {
+            System.out.println("The barrel did not save player " + activePlayer.getId() + "! :(");
+            return false;
         }
-        System.out.println("The barrel did not save player " + activePlayer.getId() + "! :(");
-        return false;
     }
 }

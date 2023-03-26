@@ -16,16 +16,11 @@ public class Indians extends Card {
         super.play(activePlayer, players);
         for (Player player : players) {
             if (player != activePlayer && player.isAlive()) {
-                boolean isBangInHandCards = false;
-                for (Card card : player.getHandCards()) {
-                    if (card instanceof Bang) {
-                        isBangInHandCards = true;
-                        System.out.println("Player " + player.getId() + " discards the Bang card!");
-                        player.discardCard(card);
-                        break;
-                    }
-                }
-                if (!isBangInHandCards) {
+                Card bang = player.getBangInCards();
+                if (bang != null) {
+                    System.out.println("Player " + player.getId() + " discards the Bang card!");
+                    player.discardCard(bang);
+                } else {
                     System.out.println("Player " + player.getId() + " loses life!");
                     player.loseLife();
                 }
