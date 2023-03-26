@@ -5,6 +5,7 @@ import sk.stuba.fei.uim.oop.cards.Card;
 import sk.stuba.fei.uim.oop.cards.Missed;
 import sk.stuba.fei.uim.oop.cards.blue.Barrel;
 import sk.stuba.fei.uim.oop.cards.blue.BlueCard;
+import sk.stuba.fei.uim.oop.cards.blue.Dynamite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,15 @@ public class Player {
             }
         }
         return null;
+    }
+
+    public boolean isDynamiteInFront() {
+        for (BlueCard frontCard : frontCards) {
+            if (frontCard instanceof Dynamite) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isAlive() {
