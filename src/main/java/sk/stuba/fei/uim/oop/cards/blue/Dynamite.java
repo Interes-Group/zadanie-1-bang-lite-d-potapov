@@ -42,7 +42,7 @@ public class Dynamite extends BlueCard {
         do {
             previousPlayerIndex = (previousPlayerIndex - 1 < 0) ? players.size() - 1 : previousPlayerIndex - 1;
             previousPlayer = players.get(previousPlayerIndex);
-        } while (!previousPlayer.isAlive() || previousPlayer.isDynamiteInFront() || previousPlayerIndex != activePlayerIndex);
+        } while (!previousPlayer.isAlive() || (previousPlayer.isDynamiteInFront() && previousPlayerIndex != activePlayerIndex));
         return players.get(previousPlayerIndex);
     }
 }
